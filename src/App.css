@@ -61,6 +61,27 @@
   border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
+.boost-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--primary-color);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.boost-badge.active {
+  background: var(--primary-color);
+  color: white;
+  box-shadow: 0 0 15px var(--primary-glow);
+}
+
 .pulse-icon {
   animation: pulse-op 2s infinite;
 }
@@ -112,6 +133,93 @@
 .nav-tab:hover {
   background: rgba(255, 255, 255, 0.05);
   color: var(--text-primary);
+}
+
+/* Rehab Module */
+.rehab-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.rehab-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.rehab-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.3s;
+}
+
+.rehab-card:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--primary-color);
+  transform: translateY(-4px);
+}
+
+.rehab-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(59, 130, 246, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+}
+
+.rehab-card h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.rehab-card p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.rehab-stats {
+  display: flex;
+  gap: 16px;
+  margin-top: auto;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-val {
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+}
+
+.start-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: var(--primary-color);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
 }
 
 .nav-tab.active {
@@ -435,6 +543,61 @@
   font-size: 0.75rem;
 }
 
+/* Custom Sliders for Tuning */
+.tuning-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
+
+.tuning-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tuning-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  display: flex;
+  justify-content: space-between;
+}
+
+.tuning-val {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+input[type="range"].tuning-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  outline: none;
+}
+
+input[type="range"].tuning-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--primary-color);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--primary-glow);
+  transition: transform 0.1s;
+}
+
+input[type="range"].tuning-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
 .suggestion-card {
   display: flex;
   align-items: center;
@@ -508,6 +671,17 @@
   transform-origin: 0 0;
   animation: sweep 4s linear infinite;
   opacity: 0.2;
+}
+
+.radar-pulse {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--primary-color) 0%, transparent 70%);
+  z-index: 1;
+  pointer-events: none;
 }
 
 @keyframes sweep {
@@ -632,4 +806,136 @@
 .icon-btn:hover {
   background: rgba(255, 255, 255, 0.05);
   color: var(--text-primary);
+}
+
+/* v1.4 Premium New UI Elements */
+.situation-picker {
+  display: flex;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+  border: 1px solid var(--border-color);
+  margin-right: 8px;
+}
+
+.situation-picker button {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.situation-picker button:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.situation-picker button.active {
+  background: var(--primary-color);
+  color: white;
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.font-size-control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  margin-bottom: 12px;
+  color: var(--text-secondary);
+}
+
+.font-size-control input {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.1);
+  accent-color: var(--primary-color);
+}
+
+.speaker-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tip-card.highlighted {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(59, 130, 246, 0.03));
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.v-bar {
+  transition: background-color 0.2s, height 0.05s ease-out;
+}
+
+/* v1.3 New UI Elements */
+.device-selection-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mini-volume-meter {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+
+.meter-fill {
+  height: 100%;
+  background: var(--primary-color);
+  box-shadow: 0 0 8px var(--primary-glow);
+  transition: width 0.1s ease-out;
+}
+
+.tips-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.tip-card {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 12px;
+}
+
+.tip-icon {
+  color: var(--primary-color);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.tip-content strong {
+  display: block;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+  color: var(--text-primary);
+}
+
+.tip-content p {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0;
 }

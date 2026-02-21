@@ -1,0 +1,17 @@
+{
+    "short_name": "에코AI 자막",
+    "name": "에코 AI: 잘 들리는 자막과 소리 증폭",
+    "icons": [
+        {
+            "src": "icon-512.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "any maskable"
+        }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#05070a",
+    "background_color": "#05070a",
+    "orientation": "portrait"
+}
