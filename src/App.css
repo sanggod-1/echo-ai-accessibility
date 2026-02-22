@@ -15,6 +15,7 @@
   border-bottom: 1px solid var(--border-color);
 }
 
+
 .logo-section {
   display: flex;
   align-items: center;
@@ -857,6 +858,7 @@ input[type="range"].tuning-slider::-webkit-slider-thumb:hover {
 .font-size-control input {
   flex: 1;
   -webkit-appearance: none;
+  appearance: none;
   height: 2px;
   background: rgba(255, 255, 255, 0.1);
   accent-color: var(--primary-color);
@@ -938,4 +940,393 @@ input[type="range"].tuning-slider::-webkit-slider-thumb:hover {
   color: var(--text-secondary);
   line-height: 1.4;
   margin: 0;
+}
+
+.translate-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px 20px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 20px;
+}
+
+.input-lang-selector,
+.lang-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.input-lang-selector label,
+.lang-selector label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+}
+
+.swap-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  box-shadow: 0 0 15px var(--primary-glow);
+  margin-top: 15px;
+}
+
+/* Translation View */
+.translate-view {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.lang-selector .glass-select {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 10px 16px;
+  color: white;
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+}
+
+.translation-container {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 60px 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+.source-section,
+.target-section {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.source-section h3,
+.target-header h3 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.detected-badge {
+  font-size: 0.7rem;
+  background: var(--primary-color);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.mini-bubble {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.mini-bubble.interim {
+  background: transparent;
+  border: 1px dashed var(--border-color);
+  opacity: 0.7;
+}
+
+.arrow-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+}
+
+.target-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.translating-tag {
+  font-size: 0.75rem;
+  color: var(--primary-color);
+  animation: pulse-op 1s infinite;
+}
+
+.translation-result {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+}
+
+.translated-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.4;
+}
+
+.pronunciation {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--secondary-color);
+  font-size: 1.1rem;
+  background: rgba(16, 185, 129, 0.1);
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.context-info {
+  margin-top: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+}
+
+.empty-translation {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+/* Rehab Game Styles */
+.rehab-game-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.back-btn {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.game-score {
+  font-weight: 700;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+.game-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 60px;
+}
+
+.audio-play-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  cursor: pointer;
+}
+
+.audio-orb {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 10px 40px var(--primary-glow);
+}
+
+.audio-play-section.playing .audio-orb {
+  animation: pulse-glow-blue 1.5s infinite;
+}
+
+@keyframes pulse-glow-blue {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 20px rgba(59, 130, 246, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.option-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  padding: 24px;
+  border-radius: 16px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.option-btn:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: var(--primary-color);
+  transform: translateY(-4px);
+}
+
+.result-section {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.result-section.success h3 {
+  color: var(--secondary-color);
+  font-size: 2rem;
+}
+
+.result-section.fail h3 {
+  color: #ef4444;
+  font-size: 2rem;
+}
+
+.next-btn {
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 16px 40px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* Specialized Product Features */
+.special-feature-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 12px;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.special-feature-btn.active {
+  background: var(--primary-color);
+  box-shadow: 0 0 15px var(--primary-glow);
+}
+
+/* Product A: High Contrast Mode for Echo Hearing */
+.content-layout.high-contrast {
+  --bg-color: #000000;
+  --surface-color: #000000;
+  --text-primary: #ffff00;
+  /* Yellow on Black is best for low vision */
+  --text-secondary: #ffffff;
+  --border-color: #ffffff;
+  --primary-color: #ffff00;
+  background: black;
+}
+
+.high-contrast .glass-morphism {
+  background: black;
+  border: 2px solid white;
+  backdrop-filter: none;
+}
+
+.high-contrast .transcript-bubble.user {
+  background: #000;
+  border: 3px solid #ffff00;
+  color: #ffff00;
+}
+
+.high-contrast .nav-tab.active {
+  background: #ffff00;
+  color: #000;
+}
+
+.high-contrast .nav-tab.active .tab-icon {
+  color: #000 !important;
+}
+
+/* Product B: Flip View for Echo Global */
+.flipped-view .target-section {
+  transform: rotate(180deg);
+  background: var(--primary-color);
+  color: white;
+}
+
+.flipped-view .target-section h3,
+.flipped-view .target-section .translated-text,
+.flipped-view .target-section .pronunciation,
+.flipped-view .target-section .context-info {
+  color: white !important;
+}
+
+.flipped-view .target-section .pronunciation,
+.flipped-view .target-section .context-info {
+  background: rgba(255, 255, 255, 0.2);
 }

@@ -14,72 +14,128 @@ export const useTranscription = (language: string = 'ko-KR') => {
         const saved = localStorage.getItem('echo_transcripts');
         return saved ? JSON.parse(saved).map((t: any) => ({ ...t, timestamp: new Date(t.timestamp) })) : [];
     });
-    const recognitionRef = useRef<any>(null);
 
+    const recognitionRef = useRef<any>(null);
+    const shouldBeListeningRef = useRef(false);
+
+    // Save transcripts to local storage
     useEffect(() => {
         localStorage.setItem('echo_transcripts', JSON.stringify(finalTranscripts));
     }, [finalTranscripts]);
 
-    const startListening = useCallback(() => {
-        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-            alert('이 브라우저는 음성 인식을 지원하지 않습니다. 크롬을 사용해 주세요.');
-            return;
-        }
-
+    const initRecognition = useCallback(() => {
         const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-        const recognition = new SpeechRecognition();
+        if (!SpeechRecognition) return null;
 
+        const recognition = new SpeechRecognition();
         recognition.continuous = true;
         recognition.interimResults = true;
         recognition.lang = language;
+        recognition.maxAlternatives = 1;
 
         recognition.onstart = () => {
+            console.log(`Recognition Started: ${language}`);
             setIsListening(true);
         };
 
-        recognition.onerror = (event: any) => {
-            console.error('Speech recognition error', event.error);
-            if (event.error === 'not-allowed') {
-                alert('마이크 접근 권한이 필요합니다.');
-            }
+        recognition.onend = () => {
+            console.log('Recognition Ended');
             setIsListening(false);
+            setInterimTranscript('');
+
+            // Crucial: Auto-restart only if we still "should" be listening
+            if (shouldBeListeningRef.current) {
+                console.log('Restarting engine...');
+                try {
+                    recognition.start();
+                } catch (e) {
+                    console.error('Restart failed, trying delayed...', e);
+                    setTimeout(() => {
+                        if (shouldBeListeningRef.current) {
+                            try { recognition.start(); } catch (err) { console.error("Final restart fail", err); }
+                        }
+                    }, 1000);
+                }
+            }
         };
 
-        recognition.onend = () => {
+        recognition.onerror = (event: any) => {
+            console.error('Recognition Error:', event.error);
+            if (event.error === 'not-allowed') {
+                shouldBeListeningRef.current = false;
+            }
             setIsListening(false);
         };
 
         recognition.onresult = (event: any) => {
             let interim = '';
             for (let i = event.resultIndex; i < event.results.length; ++i) {
+                const transcript = event.results[i][0].transcript;
                 if (event.results[i].isFinal) {
-                    const text = event.results[i][0].transcript;
-                    // Simulate Speaker ID (randomly for UI demo, in production we'd use diarization logic)
+                    console.log('Final:', transcript);
                     const speakerId = Math.floor(Math.random() * 3) + 1;
-                    setFinalTranscripts(prev => [...prev, {
-                        text,
-                        isFinal: true,
-                        timestamp: new Date(),
-                        speakerId
-                    }]);
+                    setFinalTranscripts(prev => {
+                        const last = prev[prev.length - 1];
+                        if (last && last.text === transcript && (Date.now() - last.timestamp.getTime() < 500)) {
+                            return prev;
+                        }
+                        return [...prev, {
+                            text: transcript,
+                            isFinal: true,
+                            timestamp: new Date(),
+                            speakerId
+                        }];
+                    });
                 } else {
-                    interim += event.results[i][0].transcript;
+                    interim += transcript;
                 }
             }
             setInterimTranscript(interim);
         };
 
-        recognition.start();
-        recognitionRef.current = recognition;
+        return recognition;
     }, [language]);
 
-    const stopListening = useCallback(() => {
-        if (recognitionRef.current) {
-            recognitionRef.current.stop();
-            setIsListening(false);
-            setInterimTranscript('');
+    const startListening = useCallback(() => {
+        if (isListening && recognitionRef.current) return;
+
+        shouldBeListeningRef.current = true;
+        const rec = initRecognition();
+        if (rec) {
+            recognitionRef.current = rec;
+            try {
+                rec.start();
+            } catch (e) {
+                console.error('Start error:', e);
+            }
         }
+    }, [initRecognition, isListening]);
+
+    const stopListening = useCallback(() => {
+        shouldBeListeningRef.current = false;
+        if (recognitionRef.current) {
+            try {
+                recognitionRef.current.stop();
+            } catch (e) {
+                // Ignore
+            }
+            recognitionRef.current = null;
+        }
+        setIsListening(false);
+        setInterimTranscript('');
     }, []);
+
+    useEffect(() => {
+        if (shouldBeListeningRef.current) {
+            if (recognitionRef.current) {
+                recognitionRef.current.stop();
+            }
+            const timer = setTimeout(() => {
+                if (shouldBeListeningRef.current) startListening();
+            }, 500);
+            return () => clearTimeout(timer);
+        }
+    }, [language]);
 
     const clearHistory = useCallback(() => {
         setFinalTranscripts([]);

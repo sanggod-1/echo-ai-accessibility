@@ -1,4 +1,4 @@
-# Echo AI Project Brain Log: v1.1 - v1.4 Premium Evolution
+# Echo AI Project Brain Log: v1.1 - v1.5 Dual-Identity Strategy
 **Date:** 2026-02-21
 **Project Goal:** Developing a life-changing AI mobility assistant for individuals with partial hearing loss (Father's companion).
 
@@ -20,11 +20,13 @@
 - **원격 마이크 전략:** 상대방에게 부담을 주지 않으면서 SNR을 극대화할 수 있는 사용자 본인 착용형 마이크 가이드 제공.
 - **시각적 미터링:** 마이크 입력 품질을 즉시 확인할 수 있는 미니 볼륨 바 추가.
 
-### v1.4 Premium - 상황 인지형 지능 서비스 (현재)
-- **화자 분리 UI:** 다수가 대화하는 식사 환경 등을 고려해 누가 말하는지 구분하는 시각적 태그 추가.
-- **상황별 프리셋:** 🏠 집(조용함), 🌊 야외(보통), ☕ 카페(시끄러움) 상황에 맞춰 필터와 컴프레서를 동적 조절.
-- **보편적 접근성:** 고령자의 사용성을 고려한 실시간 글자 크기 조절 및 고대비 UI.
 - **지능형 분석 연동:** Gemini 1.5 Pro를 이용한 전사 보정, 키워드 추출, 감지 분석 및 제언.
+
+### v1.5 - 이원화 제품 전략 (Current)
+- **멀티 테넌트 아키텍처:** 하나의 코어 엔진으로 두 가지 타겟 제품(의료용/번역용)을 동시 빌드하는 효율성 확보.
+- **[Echo Hearing] 고대비 모드:** 저시력 고령자를 위한 흑/황(Black & Yellow) 고대비 UI 및 재활 기능 특화.
+- **[Echo Global] 양방향 번역:** 테이블 건너편 상대방을 위한 화면 180도 반전(Flip) 기능 및 실시간 다국어 통역 최적화.
+- **통합 지식 기반:** 각 제품의 사용 데이터를 하나의 AI 엔진이 학습하여 보정 정확도 상호 향상.
 
 ---
 
@@ -44,11 +46,13 @@
 - **Remote Mic Strategy:** Provided guidance for user-worn microphones (neckband/lapel) to maximize SNR (Signal-to-Noise Ratio) without social burden on the speaker.
 - **Visual Metering:** Added mini-volume bars for instant validation of input quality.
 
-### v1.4 Premium - Situation-Aware Intelligence (Current)
-- **Speaker Diarization UI:** Visual tags to distinguish multiple voices in group settings or dining environments.
-- **Situation Preset Modes:** Dynamic adjustment for 🏠 Quiet, 🌊 Normal, and ☕ Noisy environments.
-- **Universal Accessibility:** Real-time font size control and high-contrast UI tailored for elderly usability.
 - **Intelligence Integration:** Gemini 1.5 Pro-powered transcription correction, keyword extraction, and emotional insights.
+
+### v1.5 - Dual-Identity Product Strategy (Current)
+- **Multi-Tenant Architecture:** Maximum efficiency by building two distinct products (Assistance / Translation) from a single core engine.
+- **[Echo Hearing] High Contrast Mode:** specialized Black & Yellow UI and intensive rehab features for users with low vision.
+- **[Echo Global] Cross-Table Translation:** 180-degree screen flip function for the speaker facing the user, optimizing real-time multilingual exchange.
+- **Unveiling "Giant One-Person Builder" Model:** Dominating two different markets (Senior Care / Travel Tech) with a single developer workload.
 
 ---
 

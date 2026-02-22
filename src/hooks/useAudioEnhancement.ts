@@ -47,8 +47,8 @@ export const useAudioEnhancement = () => {
         if (isEnabled) {
             audioService.stop();
             setIsEnabled(false);
-            if (animationRef.current) cancelAnimationFrame(animationRef.current);
-            setVolume(0);
+            // We don't necessarily want to stop animationRef if we want to monitor volume
+            // But audioService.stop() closes the context.
         } else {
             await audioService.init(selectedDeviceId);
             setIsEnabled(true);

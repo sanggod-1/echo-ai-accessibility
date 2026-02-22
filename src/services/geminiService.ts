@@ -1,6 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const API_KEY = "AIzaSyCg2ZZH3u0rImNQp5RxY81_OmeVyK-SwSU";
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
+console.log("Gemini API Service - Key found:", API_KEY ? "Yes (starts with " + API_KEY.substring(0, 5) + ")" : "NO");
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 export const analyzeTranscription = async (text: string) => {
@@ -33,5 +34,75 @@ export const analyzeTranscription = async (text: string) => {
   } catch (error) {
     console.error("Gemini Analysis Error:", error);
     return null;
+  }
+};
+export const translateText = async (text: string, targetLanguage: string) => {
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const prompt = `
+      You are a real-time speech translation assistant.
+      User says: "${text}"
+      Target Language: ${targetLanguage === 'Auto' ? 'Detect input and translate to English (if input is Korean) or Korean (if input is not Korean)' : targetLanguage}
+      
+      Requirements:
+      1. Detect the source language.
+      2. Translate clearly and naturally.
+      3. For non-Korean results, provide pronunciation in Korean characters.
+      4. Add one practical cultural tip.
+
+      Response Format (STRICT JSON ONLY, NO MARKDOWN):
+      {
+        "detectedLanguage": "Language Name",
+        "translatedText": "The translation",
+        "pronunciation": "Pronunciation Guide",
+        "context": "The cultural tip"
+      }
+    `;
+
+    console.log(`Starting translation for: "${text.substring(0, 20)}..." to ${targetLanguage}`);
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const rawText = response.text();
+    console.log("Gemini Raw Response Received:", rawText);
+
+    if (!rawText || rawText.trim().length === 0) {
+      throw new Error("Gemini returned an empty response");
+    }
+
+    // Handle potential JSON inside markdown blocks
+    let jsonText = rawText;
+    if (rawText.includes("```")) {
+      const match = rawText.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
+      if (match) {
+        jsonText = match[1];
+      }
+    } else {
+      const braceMatch = rawText.match(/\{[\s\S]*\}/);
+      if (braceMatch) {
+        jsonText = braceMatch[0];
+      }
+    }
+
+    try {
+      const parsed = JSON.parse(jsonText.trim());
+      console.log("Gemini Parsed Success:", parsed);
+      return parsed;
+    } catch (parseError) {
+      console.error("JSON Parse Error. Content:", jsonText);
+      throw new Error(`Failed to parse AI response: ${parseError}`);
+    }
+  } catch (error: any) {
+    console.error("!!! GEMINI TRANSLATION ERROR !!!");
+    console.error("Type:", error.name);
+    console.error("Message:", error.message);
+
+    return {
+      error: error.message || "Unknown API error",
+      detectedLanguage: "Error",
+      translatedText: "-",
+      pronunciation: "-",
+      context: "-"
+    };
   }
 };
