@@ -64,6 +64,14 @@ const App: React.FC = () => {
     context: string;
   } | null>(null);
   const [isTranslating, setIsTranslating] = useState(false);
+  const [soundSensitivity, setSoundSensitivity] = useState(70);
+  const [soundFilters, setSoundFilters] = useState({
+    'car': true,
+    'siren': true,
+    'bell': true,
+    'shout': true,
+    'kettle': true
+  });
 
   useEffect(() => {
     document.documentElement.style.setProperty('--primary-color', activeProduct.themeColor);
@@ -117,11 +125,17 @@ const App: React.FC = () => {
     if (activeTab === 'sound' && isBoostEnabled && volume > 65) {
       const timer = setTimeout(() => {
         const now = new Date();
-        const names = volume > 80 ? ['자동차 경적', '급정거 소리', '비명/큰소리'] : ['초인종', '그릇 소리', '가전 알림'];
+        const names = volume > 80 ? ['자동차 경적', '급정거 소리', '비명/큰소리'] : ['초인종', '그릇 소리', '가전 알림', '주전자 끓는 소리'];
+        const randomName = names[Math.floor(Math.random() * names.length)];
+
+        // Settings filter: Skip if specific sound type is disabled (Mock filter logic)
+        if (randomName.includes('경적') && !soundFilters.car) return;
+        if (randomName.includes('주전자') && !soundFilters.kettle) return;
+        if (randomName.includes('초인종') && !soundFilters.bell) return;
 
         const newSound = {
           id: Date.now(),
-          name: names[Math.floor(Math.random() * names.length)],
+          name: randomName,
           type: (volume > 80 ? 'danger' : 'info') as 'danger' | 'info',
           time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
           pos: { x: 10 + Math.random() * 80, y: 10 + Math.random() * 80 }
@@ -129,7 +143,13 @@ const App: React.FC = () => {
 
         setDetectedSounds(prev => {
           // Prevent duplicates in short time
-          if (prev.length > 0 && (Date.now() - prev[0].id < 2000)) return prev;
+          if (prev.length > 0 && (Date.now() - prev[0].id < (2000 - soundSensitivity * 10))) return prev;
+
+          if (newSound.type === 'danger') {
+            setDangerAlert({ active: true, name: newSound.name });
+            if ('vibrate' in navigator) navigator.vibrate([500, 200, 500]);
+          }
+
           return [newSound, ...prev].slice(0, 5);
         });
       }, 500);
@@ -165,6 +185,7 @@ const App: React.FC = () => {
 
   const [aiInsight, setAiInsight] = useState<AIInsight | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [dangerAlert, setDangerAlert] = useState<{ active: boolean; name: string }>({ active: false, name: '' });
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const exportTranscripts = () => {
@@ -565,6 +586,54 @@ const App: React.FC = () => {
                     )}
                   </div>
                 </div>
+
+                <div className="parent-tuning-section glass-morphism" style={{ padding: '20px', borderRadius: '24px', marginTop: '20px', border: '1px solid rgba(var(--primary-color), 0.2)' }}>
+                  <div className="flex items-center gap-3 mb-4" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                    <Settings size={20} color="var(--primary-color)" />
+                    <h3 style={{ fontSize: '0.85rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--primary-color)' }}>부모님 맞춤 감지 설정</h3>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '24px' }}>
+                    <div className="space-y-4">
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-secondary)' }}>감지 민감도</span>
+                        <span style={{ fontSize: '0.75rem', fontWeight: 900, color: 'var(--primary-color)' }}>{soundSensitivity}%</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="1" max="100"
+                        value={soundSensitivity}
+                        onChange={(e) => setSoundSensitivity(Number(e.target.value))}
+                        className="tuning-slider"
+                      />
+                      <p style={{ fontSize: '10px', color: 'var(--text-secondary)', marginTop: '8px' }}>값이 높을수록 미세한 소리도 더 자주 감지하고 알림을 보냅니다.</p>
+                    </div>
+
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                      <button
+                        onClick={() => setSoundFilters(f => ({ ...f, car: !f.car }))}
+                        className={`tag ${soundFilters.car ? 'active' : ''}`}
+                        style={{ padding: '8px 12px', fontSize: '0.75rem', cursor: 'pointer', background: soundFilters.car ? 'var(--primary-color)' : 'transparent', border: '1px solid var(--border-color)', borderRadius: '12px' }}
+                      >
+                        자동차 경적 {soundFilters.car ? 'ON' : 'OFF'}
+                      </button>
+                      <button
+                        onClick={() => setSoundFilters(f => ({ ...f, bell: !f.bell }))}
+                        className={`tag ${soundFilters.bell ? 'active' : ''}`}
+                        style={{ padding: '8px 12px', fontSize: '0.75rem', cursor: 'pointer', background: soundFilters.bell ? 'var(--primary-color)' : 'transparent', border: '1px solid var(--border-color)', borderRadius: '12px' }}
+                      >
+                        초인종 {soundFilters.bell ? 'ON' : 'OFF'}
+                      </button>
+                      <button
+                        onClick={() => setSoundFilters(f => ({ ...f, kettle: !f.kettle }))}
+                        className={`tag ${soundFilters.kettle ? 'active' : ''}`}
+                        style={{ padding: '8px 12px', fontSize: '0.75rem', cursor: 'pointer', background: soundFilters.kettle ? 'var(--primary-color)' : 'transparent', border: '1px solid var(--border-color)', borderRadius: '12px' }}
+                      >
+                        주전자/경고음 {soundFilters.kettle ? 'ON' : 'OFF'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </motion.div>
             )}
 
@@ -929,6 +998,31 @@ const App: React.FC = () => {
           </div>
         </aside>
       </div>
+
+      <AnimatePresence>
+        {dangerAlert.active && (
+          <motion.div
+            className="danger-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="danger-alert-modal">
+              <div className="danger-icon-wrap">
+                <ShieldAlert size={60} strokeWidth={3} />
+              </div>
+              <div className="danger-text">
+                <h2>위험 감지!</h2>
+                <p>"{dangerAlert.name}" 소리가 들립니다.</p>
+                <p style={{ fontSize: '1rem', opacity: 0.8, marginTop: '10px' }}>주변을 즉시 확인하시고 안전한 곳으로 이동하세요.</p>
+              </div>
+              <button className="close-danger-btn" onClick={() => setDangerAlert({ active: false, name: '' })}>
+                확인했습니다
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
