@@ -38,10 +38,16 @@ export const useAudioEnhancement = () => {
     useEffect(() => {
         if (isEnabled && selectedDeviceId) {
             audioService.init(selectedDeviceId).then(() => {
+                // Apply current settings after init (Integrity Fix)
+                const savedClarity = Number(localStorage.getItem('echo_clarity')) || 60;
+                const savedMumble = Number(localStorage.getItem('echo_mumble')) || 40;
+                audioService.setClarity(savedClarity);
+                audioService.setMumbleReduction(savedMumble);
+
                 startVolumeMonitoring();
             });
         }
-    }, [selectedDeviceId]);
+    }, [selectedDeviceId, isEnabled]); // Added isEnabled to trigger when first turned on
 
     const toggleEnhancement = async () => {
         if (isEnabled) {

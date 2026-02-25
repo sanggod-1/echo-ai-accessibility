@@ -186,6 +186,38 @@ const App: React.FC = () => {
   const [aiInsight, setAiInsight] = useState<AIInsight | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [dangerAlert, setDangerAlert] = useState<{ active: boolean; name: string }>({ active: false, name: '' });
+  const [isEmergency, setIsEmergency] = useState(false);
+
+  // [2026 고도화] Visual Haptic CSS Injection
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.innerHTML = `
+      @keyframes pulse-red {
+        0% { box-shadow: inset 0 0 20px rgba(239, 68, 68, 0); }
+        50% { box-shadow: inset 0 0 40px rgba(239, 68, 68, 0.6); }
+        100% { box-shadow: inset 0 0 20px rgba(239, 68, 68, 0); }
+      }
+      .visual-haptic-active {
+        animation: pulse-red 1s infinite;
+        border: 4px inset #ef4444 !important;
+        background: rgba(239, 68, 68, 0.05);
+        z-index: 9999;
+      }
+    `;
+    document.head.appendChild(style);
+    return () => { if (document.head.contains(style)) document.head.removeChild(style); };
+  }, []);
+
+  // AI 분석 결과 중 긴급 상황 여부 감시
+  useEffect(() => {
+    if (dangerAlert.active) {
+      setIsEmergency(true);
+      const timer = setTimeout(() => setIsEmergency(false), 5000); // 5초 후 자동 해제
+      return () => clearTimeout(timer);
+    }
+  }, [dangerAlert.active]);
+
+  const containerClass = `app-container ${situation === 'noisy' || isEmergency ? 'visual-haptic-active' : ''}`;
   const chatEndRef = useRef<HTMLDivElement>(null);
 
   const exportTranscripts = () => {
@@ -240,10 +272,18 @@ const App: React.FC = () => {
             if (textToProcess) {
               textBufferRef.current += (textBufferRef.current ? " " : "") + textToProcess;
 
-              // Buffering: wait for 15 words or a terminal punctuation
+              // Dynamic Buffering based on situation mode
+              // Quiet: Fast response (5 words), Normal: Standard (15 words), Noisy: Context-heavy (30 words)
+              const getBufferThreshold = () => {
+                if (situation === 'quiet') return 5;
+                if (situation === 'noisy') return 30;
+                return 15;
+              };
+
+              const bufferThreshold = getBufferThreshold();
               const words = textBufferRef.current.split(" ");
               const isSentenceEnd = /[.!?]$/.test(textToProcess);
-              const isLargeBuffer = words.length >= 15;
+              const isLargeBuffer = words.length >= bufferThreshold;
 
               if (isSentenceEnd || isLargeBuffer) {
                 const textToTranslate = textBufferRef.current;
@@ -321,7 +361,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="app-container">
+    <div className={containerClass}>
       {/* Top Navigation */}
       <header className="glass-morphism header" style={{ borderColor: activeProduct.themeColor + '33' }}>
         <div className="logo-section">

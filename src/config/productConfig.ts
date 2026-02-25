@@ -13,7 +13,7 @@ export const PRODUCTS: Record<ProductMode, ProductDefinition> = {
     HEARING: {
         id: 'HEARING',
         name: 'Echo Hearing',
-        version: 'v1.5 Assist',
+        version: 'v2.0 Pro',
         themeColor: '#3b82f6', // Blue
         description: '잔존 청력 최적화 및 청능 재활 시스템',
         allowedTabs: ['transcribe', 'sound', 'rehab']

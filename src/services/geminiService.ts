@@ -1,30 +1,40 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
-console.log("Gemini API Service - Key found:", API_KEY ? "Yes (starts with " + API_KEY.substring(0, 5) + ")" : "NO");
+console.log("✅ Tier 1 Key Authorized:", API_KEY ? `${API_KEY.substring(0, 4)}...${API_KEY.substring(API_KEY.length - 4)}` : "❌ NO KEY FOUND");
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 export const analyzeTranscription = async (text: string) => {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // [2026 고도화] Hybrid Intelligence Strategy
+    const modelName = "gemini-2.5-flash";
+    const model = genAI.getGenerativeModel({ model: modelName });
+
+    // [2026 고도화] 의료 맥락 감지
+    const isMedical = /병원|치과|수술|치료|아파|상담|약|처방/.test(text);
 
     const prompt = `
-      상황: 청각 장애가 있는 아버님을 위한 실시간 대화 지원 시스템입니다.
+      상황: 청각 장애가 있는 어머님/아버님을 위한 실시간 대화 지원 시스템입니다.
       입력 텍스트: "${text}"
+      분석 모델: ${modelName} (전략적 모델링 적용)
       
-      작업 가이드라인:
-      1. [문장 보정]: 아버님이 잘못 들었을 가능성이 높은 '유사 발음'을 맥락에 맞게 교정하세요. (예: '수레' -> '수레' 혹은 '술에')
-      2. [인지 최적화]: 인지 부하를 줄이기 위해 문장을 더 짧고 명확하게 단순화(Simplify) 하세요.
-      3. [뉘앙스 포착]: 화자의 목소리 톤이나 상황에서 느껴지는 감정을 '평온/기쁨/긴급/분노' 중 하나로 분석하십시오.
-      4. [추천 답변]: 대화의 흐름을 끊지 않으면서 아버님이 바로 선택해 쓸 수 있는 짧은 답변 2개를 만드세요.
-      5. [핵심 키워드]: 대화 내용 중 가장 중요한 단어 2개를 뽑으세요.
+      작업 가이드라인 [Ultimate Sophistication]:
+      1. [문장 보정]: 발음이 뭉개졌거나 유사 발음으로 잘못 인식된 단어를 맥락 상 100% 맞는 단어로 교정하십시오.
+      2. [인지 최적화]: 인지 부하 감소를 위해 '핵심 팩트' 위주로 극도로 명확하고 짧게 단순화하십시오.
+      3. [뉘앙스 및 강도]: 화자의 감정 및 그 강도(1~10)를 정밀 분석하십시오.
+      4. [예측형 답변 (Predictive)]: 상대방의 말에 대해 아버님이 바로 선택할 수 있는 '맥락 상의 최적 답변' 2개.
+      ${isMedical ? "5. [의료 가이드]: 환자의 안전과 관련된 내용이므로 용어를 정확히 사용하고 긴급도를 체크하십시오." : "5. [주변 생활음 감지]: 텍스트의 맥락 상 주변에서 들릴 수 있는 소리를 예측하십시오."}
+      6. [핵심 키워드]: 대화의 주제를 관통하는 단어 2개.
 
       JSON 형식으로만 엄격히 응답하세요:
       {
-        "correctedText": "보정 및 단순화된 명확한 문장",
+        "correctedText": "보정 및 극도로 단순화된 문장",
         "keywords": ["핵심단어1", "핵심단어2"],
-        "emotion": "분석된 감정",
-        "suggestions": ["추천답변1", "추천답변2"]
+        "emotion": "감정명",
+        "emotionIntensity": 10,
+        "isEmergency": ${isMedical ? "true" : "false"},
+        "environmentalPredict": "예측된 주변 소리",
+        "suggestions": ["답변1", "답변2"]
       }
     `;
 
@@ -39,7 +49,7 @@ export const analyzeTranscription = async (text: string) => {
 };
 export const translateText = async (text: string, targetLanguage: string) => {
   try {
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({ model: "gemini-2.5-pro" });
 
     const prompt = `
       You are a real-time speech translation assistant.
